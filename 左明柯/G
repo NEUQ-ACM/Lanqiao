@@ -1,0 +1,48 @@
+#include<iostream>
+#include<cmath>
+#include<cstring>
+using namespace std;
+int num[20 + 5];
+long long a;
+void trans(long long a)
+{
+    int cnt = 1;
+    while (a) {
+        if (a & 1)num[cnt]++;
+        cnt++;
+        a >>= 1;
+    }
+}
+int main()
+{
+    int N;
+    cin >> N;
+    while (N--) {
+        memset(num, 0, sizeof(num));
+        int n, sum = 0;
+        cin >> n;
+        for (int i = 0; i < n; i++) {
+            cin >> a;
+            trans(a);
+            sum ^= a;
+        }
+        if (!sum)cout << 0 << endl;
+        else {
+            for (int i = 20; i > 0; i--)
+                if (num[i] == 1) { 
+                    cout<<1<<endl; 
+                    break; 
+                }
+                else if (num[i] % 2 == 1) {
+                    if (n % 2 == 1) { 
+                        cout << 1 << endl; 
+                        break; 
+                    }
+                    else if (n % 2 == 0) {
+                        cout << -1 << endl; 
+                        break;
+                    }
+                }
+        }
+    }
+}
