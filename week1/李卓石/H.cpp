@@ -1,8 +1,8 @@
 #include<bits/stdc++.h> 
 using namespace std;
-const int maxn=1e5+5;
-char s[maxn];
-int pos[30],nx[maxn],pre[maxn];
+const int M=1e5+5;
+char s[M];
+int pos[M],nx[M],pre[M];
 long long res=0;
 int main()
 {
