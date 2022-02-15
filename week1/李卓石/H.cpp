@@ -8,7 +8,7 @@ int main()
 {
     scanf("%s",s+1); 
     int len=strlen(s+1);
-    for(int i=1;i<=len;i++)
+    for(int i=1;i<=len;i++)//预处理每一个相对的前一个
     {
         pre[i]=pos[s[i]-'a'];
         pos[s[i]-'a']=i;
