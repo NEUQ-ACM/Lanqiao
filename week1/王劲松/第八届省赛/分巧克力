@@ -1,0 +1,35 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n, k,h[100010],w[100010];;
+bool ok(int x){//判断分割为x*x大小的巧克力是否够分
+    int i, j= 0;
+    for (i = 0; i < n; i++)
+        j+= (h[i] / x)*(w[i] / x);
+    return j>= k;
+}
+void solute()
+{
+    int res=10000;
+    for(int i=0;i<n;i++)
+    {
+        res=max(res,h[i]);
+        res=max(res,w[i]);
+    }
+    int l=1,r=res,m=(l+r+1)/2;
+    while(l!=r)
+    {
+        if(ok(m)==true)
+            l=m;
+        else
+            r=m-1;
+        m=(l+r+1)/2;
+    }
+    cout<<m;
+}
+int main()
+{
+    cin>>n>>k;
+    for(int i=0;i<n;i++)scanf("%d%d",&h[i],&w[i]);
+     solute();
+    return 0;
+}
