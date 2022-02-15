@@ -1,4 +1,3 @@
-``` cpp
 #include <bits/stdc++.h>
 using namespace std;
 int main()
@@ -16,4 +15,4 @@ q/=10;
 cout<<s;
 return 0;
 }
-```
+=
