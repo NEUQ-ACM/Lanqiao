@@ -3,12 +3,12 @@ using namespace std;
 int n,y[13]={0,31,28,31,30,31,30,31,31,30,31,30,31};
 bool print(int x)
 {
-    int a[5],now=x,tmp=1;
+    int a[5],now=x,t=1;
     for(int i=1;i<=4;i++)
         a[i]=now%10,now/=10;
     x*=10000;
     for(int i=4;i>=1;i--)
-        x+=tmp*a[i],tmp*=10;
+        x+=t*a[i],t*=10;
     if(x<=n) return 0;
     printf("%d\n",x);
     return 1;
