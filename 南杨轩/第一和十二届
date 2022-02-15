@@ -1,0 +1,328 @@
+# 第一届蓝桥杯国际赛
+
+
+
+## A.仓库布局
+
+##### 1.解题思路：
+
+​	南北走向的过道数与6有关，东西走向的过道数与3有关（将每3条东西走向的行数看成整体，讨论最后一条行情况），以此计算空格数。
+
+##### 2. C++代码如下：
+
+```c++
+#include<iostream>`
+
+`using namespace std;`
+
+`int main()`
+`{`
+	`int m=0,n=0,sum=0;`
+	`cin>>n>>m;`
+	`int a=m/6; //列过道数` 
+	`int b=n%3;`
+	`int c=n/3;//行过道数`
+	`if(b==1||b==2)`
+		`{`
+			`++c;` 	
+		`}`
+	`sum=(n-c)*(m-a);`	
+	`cout<<sum<<endl;`
+	`return 0;`	
+`}` 
+```
+
+
+
+## B.网站扩张 
+
+##### 1.解题思路：
+
+​	采用递归思想，时间复杂度可能比较大。由于每个人所经历的过程是相同的,所以只要把第一个人所邀请的人与其邀请的人的邀请的人相加，利用递归思想，即可完成。
+
+##### 2. C++代码如下：
+
+```c++
+#include<iostream>
+using namespace std;
+int test(int n)
+{
+	int m=n-7;
+	if(m<=0) return 0;
+	int sum1=0;
+	sum1=m/3;
+	int a=sum1;
+	if(m%3)
+		sum1++;	
+	for(int i=0;i<a;i++)
+		sum1+=test(m-3*i); 
+	return sum1;
+} 
+int main()
+{
+	int n=0;
+	cin>>n;
+	cout<<test(n)+1<<endl;
+	return 0;
+}
+```
+
+## C.基因配对
+
+##### 1.解题思路：
+
+​	先将S转换成与之配对的碱基对，然后分别从L两头寻找与转化后的S两头相等的碱基（以简化代码量），若找到，则判断。若成功，则返回最早配对的位置。若失败，则再次循环，直至L两端差小于S长度为止，返回0。
+
+##### 2. C++代码如下：
+
+```c++
+#include<iostream>      //ATCAAATCG
+#define x 1000000       //TTTAG
+#include<cstring> 
+using namespace std;
+int test(char l[],char s[],int l1,int l2)
+{
+	int a=0,b=l1-1,m=0;
+	while(true)
+	{
+		while(s[0]!=l[a]) a++;
+		int z=a+1;
+		for(int i=1;i<l2;i++)
+		{
+			if(s[i]!=l[z]) break;
+			z++;
+		}
+		if((z-a)==l2) return a+1;
+		
+
+		while(s[l2-1]!=l[b]) b--;
+		int zz=b-1;
+		for(int j=l2-2;j>=0;j--)
+		{
+			if(s[j]!=l[zz]) break;
+			zz--;
+		}
+		if((b-zz)==l2) return b-3;
+		
+		if((b-a+1)<l2) break;
+		else if((b-a+1)>l2) 
+			{
+				a++;
+				b--;
+			}
+	} 
+	return m;
+
+}
+int main()
+{
+	char L[x],S[x]; 
+	cin>>L>>S;
+	int l1=strlen(L);
+	int l2=strlen(S);
+	for(int i=0;i<l2;i++)
+		{
+			if(S[i]=='A')
+				S[i]='T';
+			else if(S[i]=='T')
+				S[i]='A';
+			else if(S[i]=='C')
+				S[i]='G';
+			else if(S[i]=='G')
+				S[i]='C';				
+		}
+	cout<<test(L,S,l1,l2)<<endl;
+	return 0;
+}
+```
+
+
+
+## D .E .F .G .H ...........
+
+之后的题目就无能为力了.......
+# 第十二届蓝桥杯
+
+
+
+##   A.卡片
+
+
+
+##### 1.解题思路：
+
+​	只需从1开始，将每个数的每个位上的数遍历一遍。
+
+##### 2. C++代码如下：
+
+```c++
+#include<iostream>
+using namespace std;
+int main()
+{
+	int n=0;
+	int num[10];
+	cin>>n;
+	for(int i=0;i<10;i++)
+		num[i]=n;
+	for(int j=1;;j++)
+		{
+			int x=j;
+			while(x)
+				{
+					int m=x%10;
+					num[m]--;
+					if(num[m]<0) 
+					{
+						cout<<j-1<<endl;
+						break;
+					}
+					x/=10;
+				}
+			if(x!=0) break;
+		}
+	return 0;	
+}
+```
+
+##### 3.结果如下：
+
+​	答案：3183
+
+
+
+## B.直线
+
+##### 1.解题思路：
+
+​		根据公式：
+$$
+y-y1=(y1-y2)/(x1-x2)*(x-x1) 即，(x2-x1)y-(y2-y1)x=x2y1-x1y2.
+$$
+判断直线是否相同。
+
+##### 2. C++代码如下：
+
+```c++
+#include<iostream>
+using namespace std;
+struct Point 
+{
+	int x;
+	int y;	
+}; 
+struct Proportion//记录比例 
+{
+	int a;
+	int b;
+	int c;
+bool operator!=(int a)
+{
+	if(this->a==a&&b==a&&c==a) return false;
+	else return true;
+}
+bool operator==(Proportion &p)
+	{
+		if((a==0&&p.a!=0)||(b==0&&p.b!=0)||(c==0&&p.c!=0)) return false;
+		else if((a!=0&&p.a==0)||(b!=0&&p.b==0)||(c!=0&&p.c==0)) return false;
+		else 	
+		{
+			if(a==0&&b==0&&c==0) return true;
+			else if((a==0&&b==0&&c!=0)||(a!=0&&b==0&&c==0)||(a==0&&b!=0&&c==0)) 
+				 return true;
+			else if(a==0&&b!=0&&c!=0) 
+				{
+					double z=b*1.0/c;
+					double zz=p.b*1.0/p.c;
+					if(z==zz) return true;
+					else return false;
+				}
+			else if(a!=0&&b==0&&c!=0) 
+				{
+					double z=a*1.0/c;
+					double zz=p.a*1.0/p.c;
+					if(z==zz) return true;
+					else return false;
+				}
+			else if(a!=0&&b!=0&&c==0) 
+				{
+					double z=a*1.0/b;
+					double zz=p.a*1.0/p.b;
+					if(z==zz) return true;
+					else return false;
+				}
+			else if(a!=0&&b!=0&&c!=0) 
+				{
+					double z=a*1.0/b;
+					double zz=p.a*1.0/p.b;
+					double zzz=a*1.0/c;
+					double zzzz=p.a*1.0/p.c;
+					double xxx=b*1.0/c;
+					double xxxx=p.b*1.0/p.c;
+					if((z==zz)&&(xxx==xxxx)&&(zzz==zzzz)) return true;
+					else return false;
+				}
+		}
+	}
+};
+int main()
+{
+	Point p[10000];
+	int a=0,b=0;
+	cout<<"请输入几行,几列："<<endl;
+	cin>>a>>b;
+	int n=a*b;//n个点 
+	int j=0,k=0;	
+	for(int i=0;i<n;i++)
+		{
+			p[i].x=k;
+			p[i].y=j;
+			if(k==a-1) 
+				{
+					k=0;
+					j++;
+				}
+			else k++;
+		 }
+	int o=a*b*(a*b-1)/2;  
+	Proportion pp[o];
+	int m=0;	 
+	for(int i=0;i<n-1;i++)
+		for(int j=i+1;j<n;j++)
+			{
+				pp[m].a=p[j].x-p[i].x;
+				pp[m].b=p[j].y-p[i].y;
+				pp[m].c=p[j].x*p[i].y-p[i].x*p[j].y;
+				m++;
+			}
+	int x=0;//记录直线条数
+	for(int i=0;i<m;i++)
+		{
+			for(int j=i+1;j<m;j++)
+				if(pp[i]==pp[j]) 
+				{
+					pp[j].a=0;
+					pp[j].b=0;
+					pp[j].c=0;
+				}
+		}
+	for(int i=0;i<m;i++)
+		{
+			if(pp[i]!=0) x++;
+		}
+	cout<<"直线条数："<<x<<endl;
+	return 0;	
+}
+```
+
+
+
+##### 3.结果如下：
+
+请输入几行,几列：	20 21
+直线条数：40257（缺点是算法比较垃圾，费时32 s）
+
+
+
+
+
