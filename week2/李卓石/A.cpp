@@ -1,17 +1,18 @@
 #include <bits/stdc++.h>
 using namespace std;
+int a[10],t;
 int main()
 {
-int s=0,q;
-for(int i=1;i<=2020;i++)
+for(int i=1;;i++)
 {
-q=i;
-while(q)
+t=i;
+while(t)
 {
-if(q%10==2)s++;
-q/=10;
+a[t%10]++;//逆序统计
+if(a[t%10]==2021)
+{cout<<i;return 0;}//程序终止的设置
+t/=10;
 }
 }
-cout<<s;
 return 0;
 }
