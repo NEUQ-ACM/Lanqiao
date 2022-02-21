@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+int f(){
+    int a=0,b=0;
+    while(1){
+      char c;
+      c=getchar();
+      if(c=='x')a++;
+      else if(c=='|'){
+        b=a,a=0;
+      }
+      else if(c=='(')a+=f();
+      else {
+        return max(a,b);
+      }
+    }
+}
+int main()
+{
+    cout<<f()<<endl;
+  return 0;
+}

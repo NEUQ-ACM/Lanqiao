@@ -1,0 +1,118 @@
+（这个实在不会，贴个题解区的）
+//
+// Created by  HuJJun on 2022/1/24.
+//
+
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+using namespace std;
+const int N = 10005;    //最多个数
+//线段 ，将矩形转为 下面的入边 和 下面的出边
+struct Line {
+    int h;      //线的y坐标     线的高度
+    int l, r;  //线的最左端和最右端
+    int f;   //标记出入边 入边1，出边-1
+    Line(int y, int x1, int x2, int flag) : h(y), l(x1), r(x2), f(flag) {}
+    bool operator<(const Line L) {
+        if (h != L.h)    //其实只需要根据高度就可以起，其他多余
+            return h < L.h;
+        if (l != L.l)  //强迫症，我就喜欢排的整整齐齐
+            return l < L.l;
+        if (r != L.r)
+            return r < L.r;
+        return f > L.f;
+    }
+};
+//存放线
+vector<Line> line;
+int line_cnt;
+//存放点    用于点与线段转换使用
+vector<int> point;
+int point_cnt;  //有效点个数，将点进行去重后剩余点个数
+//线段树 用于计算区间线段长度
+struct SegTree {
+    int l, r;       //左右边界
+    int cnt = 0;    //出入度和
+    int len = 0;    //长度
+    SegTree *lChild, *rChild;
+    SegTree(int l,int r):l(l),r(r){}
+}*tree;
+//建立线段树
+SegTree* build(int l,int r) {
+    SegTree *tree = new SegTree(l,r);
+    if (l == r) return tree;
+    int m = (l + r) >> 1;
+    tree->lChild = build(l, m);
+    tree->rChild = build(m + 1, r);
+    return tree;
+}
+void pushUp(SegTree *tree) {
+    //cnt 只有在完全覆盖 和 叶子 才会 产生变化，其他时候都是0
+    if (tree->cnt > 0) {   //cnt > 0 说明有入边 计算入边长度
+        //第1条 ~ 第3条          =>  point[1-1]  ~ point[3]
+        //第l条 到 第r条         =>  point[l-1]  ~ point[r]
+        tree->len = point[tree->r] - point[tree->l - 1];
+    } else {
+        if (tree->l == tree->r) //当是叶子的时候 归零
+            tree->len = 0;
+        else    //其他情况 左右子树 之和
+            tree->len = tree->lChild->len + tree->rChild->len;
+    }
+    //cout <<"len : "<< l << "~" << r << ":" << tree->cnt << " " << tree->len << endl;
+}
+
+void update(SegTree *tree,int l,int r,int value) {
+    if (l <= tree->l && tree->r <= r) { //完全覆盖
+        tree->cnt += value; //修改线段状态
+        pushUp(tree);
+        return;
+    }
+    int m = (tree->l + tree->r) >> 1;   //左 tl~m     右 m+1~tr
+    if (l <= m)
+        update(tree->lChild, l, r, value);
+    if (r >= m + 1)
+        update(tree->rChild, l, r, value);
+    pushUp(tree);
+}
+int main() {
+    int n;
+    int x1, x2, y1, y2;
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> x1 >> y1 >> x2 >> y2;
+        //保证1小2大
+        if (x1 > x2) swap(x1, x2);
+        if (y1 > y2) swap(y1, y2);
+        //添加 出入边
+        line.push_back(Line(y1, x1, x2, 1));
+        line.push_back(Line(y2, x1, x2, -1));
+        //添加 两个点
+        point.push_back(x1);
+        point.push_back(x2);
+    }
+    sort(line.begin(), line.end()); //将边 排序
+    line_cnt = line.size();
+
+    sort(point.begin(), point.end());   //将点排序
+    point_cnt = unique(point.begin(), point.end()) - point.begin(); //去重
+
+    
+    //point_cnt 个点， 那就 point_cnt-1 条边
+    tree = build(1, point_cnt - 1);
+
+    int ans = 0;
+    for (int i = 0; i < line_cnt - 1; ++i) {
+        int p1 = lower_bound(point.begin(), point.begin() + point_cnt, line[i].l) - point.begin() + 1;
+        int p2 = lower_bound(point.begin(), point.begin() + point_cnt, line[i].r) - point.begin() + 1;
+        // 第1点~第3点          =>      第 1 条边, 第 2 条边
+        //起点p1 终点p2         =>      边为 p1   ~  p2-1
+        //cout << "update : "<<line[i].l<<"~"<<line[i].r<<" : "<<p1 << "~" << p2-1 << " "<<line[i].f << endl;
+        update(tree, p1, p2-1, line[i].f);   //更新线段区间
+        //cout << tree->len <<"*"<< (line[i+1].h-line[i].h) << endl;
+        ans += tree->len * (line[i + 1].h - line[i].h); //计算面积 len 为底面长 ，高为 下一条线与当前线的 高度差
+    }
+    cout << ans << endl;
+    return 0;
+}
