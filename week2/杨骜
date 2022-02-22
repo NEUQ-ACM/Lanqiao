@@ -1,0 +1,105 @@
+第九届蓝桥杯省赛A组
+
+A.按照题意模拟即可。答案为1048575/524288。
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+int gcd(int a, int b) {
+	return b ? gcd(b, a % b) : a;
+}
+int main(){
+	int i, j, b=1, c=0, a=1;
+	for(i=1; i<20; i++){
+		a = a*2;
+		b += a;
+	}
+	int t = gcd(b, a);
+	while(t != 1){
+		b /= t;
+		a /= t;
+		t = gcd(b, a);
+	}
+	printf("%d/%d\n",b,a);
+	return 0;
+} 
+```
+
+B.用笔算一下知道是5217。
+
+C.10=2*5，即求上面的数据中能分解出多少2 和 5，两者中较少的一个的数量即为答案，显然2很多，直接求5即可。答案为31。
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+	int a=0, cnt=0;
+	while( cin>>a)
+	{
+		while(a%5==0) {
+			cnt++;
+			a/=5;
+		}
+	}
+	cout<<cnt;
+	return 0;
+} 
+```
+
+D.去找符合题意的数字，不如将符合题意的数字全部列出来，直到找到题目中数字，看看在哪一位，动态规划，从小到大依次列举所有数字。
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+const int m = 1e6+10;
+long long f3 = 0, f5 = 0, f7 = 0;
+long long f[m];
+long long n = 59084709587505;
+int main(){
+	f[0] = 1;
+	long long i;
+	for(i = 1; f[i-1] < n; i++){
+		f[i] = min(min(f[f3]*3, f[f5]*5), f[f7]*7);
+		if(f[i] / f[f3] == 3) f3++;
+		if(f[i] / f[f5] == 5) f5++;
+		if(f[i] / f[f7] == 7) f7++;
+	}
+	cout << i-1 << endl;
+	return 0;
+} 
+```
+
+E.观察规律，得知应填size/3。
+
+K.从大到小，依次循环去找即可。
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+	int n, k, max = 0;
+	cin>>n>>K;
+	int a[n];
+	for( int i=0; i<n; i++) {
+		cin>>a[i];
+	}
+sort( a, a+n); 
+	for( int i=n-1; i>1; i--) {
+		for( int j=i-1; j>0; j--) {
+			for( int z=j-1; z>=0; z--) {
+				if( (a[i]+a[j]+a[z])%k==0) {
+					max = a[i]+a[j]+a[z];
+					goto p;
+				}
+			}
+		}
+	}
+p:cout<<max<<endl;
+	return 0;
+}
+```
+
+L.从小到大依次付款如果待付款的人带的钱够付接下来要付的款的均分值，就付均分值，如果不够，就有多少出多少，出不全的部分加到待付款里，重新计算每人待付款。
+
