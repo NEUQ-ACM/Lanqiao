@@ -1,0 +1,16 @@
+#include <bits/stdc++.h>
+using namespace std;
+int a[11];
+int main(){
+for(int i=1;i<=2020;i++)
+{    int ans=i;
+	while(ans){
+		a[ans%10]++;
+		ans=ans/10;
+		
+	}
+}
+cout<<a[2];
+return 0;
+
+}

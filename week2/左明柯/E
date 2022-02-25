@@ -1,0 +1,10 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main(){
+int m=20,n=20;
+cout<<m*m+0.5*n*n+2*m*n-m+0.5*n+1;
+
+
+return 0;
+
+}
