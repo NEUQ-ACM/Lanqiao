@@ -1,0 +1,365 @@
+# 第十一届蓝桥杯省赛A组
+
+
+
+## A.门牌制作
+
+##### 1.解题思路：
+
+​	暴力，遍历。
+
+##### 2. C++代码如下：
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+int judge(int n)
+{
+	int x=0;
+	while(true)
+		{
+			int a=n%10;
+			if(a==2) x++;
+			n/=10;
+			if(n==0) break;
+		}
+	return x;
+}
+int main()
+{
+	int n=0;
+	for(int i=2;i<=2020;i++)
+		{
+			int a=judge(i);
+			if(a!=0) n+=a;
+		}
+	cout<<n;
+	return 0;
+} 
+```
+
+##### 3.答案：
+
+624
+
+
+
+## B.既约分数
+
+##### 1.解题思路：
+
+​	暴力遍历。
+
+##### 2. C++代码如下：
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+bool judge(int x,int y)
+{
+	if(y>x)
+		{
+			int a=x;
+			x=y;
+			y=a;
+		}
+	int temp=x%y;
+	while(temp)
+		{
+			x=y;
+			y=temp;
+			temp=x%y;
+		}
+	if(y==1) return true;
+	else return false;
+}
+int main()
+{
+	int x=0;
+	for(int i=1;i<=2020;i++)
+		for(int j=1;j<=2020;j++)
+			{
+				if(judge(i,j)) x++;
+			}
+	cout<<x;
+	return 0;
+ } 
+```
+
+##### 3.答案：
+
+2481215
+
+
+
+## C.蛇形填数
+
+##### 1.解题思路：
+
+​	找规律，多一行一列，多加4。
+
+##### 2. C++代码如下：
+
+```c++
+/*
+ 1 2 6 7 15 16 28 29 45 46 66
+ 3 5 8 14 17 27 30 44 47 65
+ 4 9 13 18 26 31 43 48 64
+10 12 19 25 32 42 49 63
+11 20 24 33 41 50 62
+21 23 34 40 51 61
+22 35 39 52 60
+36 38 53 59
+37 54 58
+55 57
+56
+*/
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+	int n=0;
+	int x=1;
+	cin>>n;
+	for(int i=1;i<=(n-1);i++)
+		x+=4*i;
+	cout<<x;
+	return 0; 
+}
+```
+
+##### 3.答案：
+
+761
+
+
+
+## F.成绩分析
+
+##### 1.解题思路：
+
+​	遍历。
+
+##### 2. C++代码如下：
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+	int n=0;
+	int sum=0;
+	int min=101,max=0;
+	cin>>n;
+	for(int i=0;i<n;i++)
+		{
+			int a;
+			cin>>a;
+			sum+=a;
+			if(a<min) min=a;
+			if(a>max) max=a;
+		} 
+	float b=sum*1.0/n;
+	cout<<max<<endl;
+	cout<<min<<endl;
+	cout<<setiosflags(ios::fixed)<<setprecision(2)<<b;
+	return 0;
+}
+```
+
+
+
+##### 3.答案
+
+![image-20220222094755481](C:\Users\xuan\AppData\Roaming\Typora\typora-user-images\image-20220222094755481.png)
+
+
+
+
+
+## G.回文日期
+
+##### 1.解题思路：
+
+​	月份号数是有尽的，可枚举出所有回文年份，再进行判断。
+
+##### 2. C++代码如下：
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+	int x=1;//回文
+	int xx=1;//ABAB型 
+	int nnn=0;//ABAB
+	int nn=0;//回文 
+	int k=0;
+	int num[366];
+void Quick(int *a,int start,int end)
+{
+	if(start>end) return;
+	int i=start;
+	int j=end;
+	int key=a[i];
+	while(i<j)
+		{
+			while(i<j&&a[j]>=key)
+				j--;
+			a[i]=a[j];
+			while(i<j&&a[i]<=key)
+				i++;
+			a[j]=a[i];		
+		}
+	a[i]=key;
+	Quick(a,start,i-1);
+	Quick(a,i+1,end);
+}
+void do_work(int i)
+{
+	for(int j=i;j<k;j++)
+		{
+			int ge=num[j]%10;//个位 
+			int shi=(num[j]/10)%10;//十位 
+			int bai=(num[j]/100)%10;//百位
+			int qian=(num[j]/1000)%10;//千位 
+			if(qian==shi&&ge==bai&&xx!=0)
+				{
+					nnn=num[j]*10000+ge*1000+shi*100+bai*10+qian;
+					xx=0;
+				}
+			else if((qian!=shi||ge!=bai)&&x!=0)
+				{
+					nn=num[j]*10000+ge*1000+shi*100+bai*10+qian;
+					x=0;
+				}
+			if(x==0&&xx==0) return;							
+		}	
+}
+int main()
+{
+	for(int i=1;i<=12;i++)
+		{
+			if(i==1||i==3||i==5||i==7||i==8||i==10||i==12)
+				for(int j=1;j<=31;j++)
+					{
+						num[k]=(j%10)*1000+(j/10)*100+(i%10)*10+i/10;
+						k++;		
+					}
+			else if(i==2)
+				{
+					for(int j=1;j<=29;j++)
+						{
+							num[k]=(j%10)*1000+(j/10)*100+(i%10)*10+i/10;
+							if(j==29)
+								{
+									if(!((num[k]%4==0&&num[k]%100!=0)||num[k]%400==0) ) num[k]=0;
+								}							
+							k++;						
+						}
+				}
+			else  if(i==4||i==6||i==9||i==11)
+				for(int j=1;j<=30;j++)
+					{
+						num[k]=(j%10)*1000+(j/10)*100+(i%10)*10+i/10;
+						k++;							
+					}
+		}
+	Quick(num,0,k-1);
+	int n=0;
+	cin>>n;
+	int a=n%100;//日 
+	n/=100;
+	int b=n%100;//月
+	int c=n/100;//年 
+	for(int i=0;i<k;i++)
+		{
+			if(num[i]==c) 
+				{
+					int b1=c%10*10+(c/10)%10;//月
+					int a1=(c/100)%10*10+(c/1000)%10;//日 
+					if(b1>=b&&a1>a) 
+						{
+							do_work(i);
+							break;
+						}
+					else 
+						{
+           					do_work(i+1); 
+							break;							
+						}
+				}
+			else if(num[i]<c&&num[i+1]>c) 
+				{
+					do_work(i+1);
+					break;											
+				}
+		}
+	if(nn==0) cout<<"未找到相应的回文日期"<<endl; 
+	else cout<<nn<<endl;
+	if(nnn==0) cout<<"未找到相应的ABABBABA型回文日期"; 
+	else cout<<nnn;			
+	return 0;
+}
+```
+
+##### 3.答案
+
+![image-20220223151203676](C:\Users\xuan\AppData\Roaming\Typora\typora-user-images\image-20220223151203676.png)
+
+
+
+
+
+## H.字串分值
+
+##### 1.解题思路：
+
+​	按次序依次算出子字串数值，再相加。
+
+##### 2. C++代码如下：
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+char s[100000];
+class Letter
+{
+public:
+	char x;
+	int y;	
+};
+Letter mm[26];
+int jian_suo(int i,int j)
+{
+	char mmm='a';
+	for(int o=0;o<26;o++)
+		{
+			mm[o].x=mmm++;
+			mm[o].y=0;
+		}
+	for(int n=i;n<i+j;n++)
+		{
+			char a=s[n];
+			for(int o=0;o<26;o++)
+				if(a==mm[o].x) mm[o].y++;
+		}
+	int x=0;
+	for(int o=0;o<26;o++)
+		if(mm[o].y==1) x++;	
+	return x;
+}
+int main()
+{
+	int sum=0;
+	cin>>s;
+	int a=strlen(s);
+	for(int i=0;i<a;i++)//代表开始字符序号 
+		for(int j=1;j<=a-i;j++)//代表字符长度 
+			sum+=jian_suo(i,j);
+	cout<<sum;
+	return 0;
+}
+```
+
+##### 3.答案
+
+![image-20220223194813279](C:\Users\xuan\AppData\Roaming\Typora\typora-user-images\image-20220223194813279.png)
