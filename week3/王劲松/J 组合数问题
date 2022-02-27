@@ -1,0 +1,63 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long LL;
+const int INF = 0x3f3f3f3f;
+const double Pi = acos(-1);
+const LL Mod = 1e9+7;
+const LL inv_2 = 5e8+4;//inv_2是2对于Mod的逆元。即inv_2=（Mod+1）/2 。
+LL dp[65][4];
+/*
+用卢卡斯定理后转化为n，m的k进制数中，n中至少有一位大于m则模k为0.
+考虑对立事件，求出n中所有位都大于m的对数，在用总方案减去它 
+*/
+LL calc(LL x, LL y){//x取值[0, x], y取值[0,y] x >=y的数量 
+    if(x<0||y<0) 
+        return 0;
+    if(x<y){
+        x%=Mod; 
+        y%=Mod;
+        return (x+2)*(x+1)%Mod*inv_2%Mod;//如果x小于y，则共有（x+1）*（x+2）/2种
+    }
+      x%=Mod;y%=Mod;
+      return ((y+2)*(y+1)%Mod*inv_2%Mod+(x-y)*(y+1)%Mod)%Mod;//y大于x。则(y+1)*(y+2)/2+(x-y)(y+1) 
+}
+LL calc1(LL x,LL y) { // x不变，y取值为[0,y] x >= y的数量 
+      return min(x,y)+1;
+}
+LL calc2(LL x,LL y) { // y不变 x取值为[0,x] x >= y的数量 
+      if(x<y) return 0;
+      return x-y+1;
+}
+LL a[100], b[100], P;
+int main(){
+    int t;
+    scanf("%d%lld",&t,&P);
+    while(t--){
+        LL n, m, ans;
+        scanf("%lld%lld",&n,&m);
+        if(m>n)//如果给的m大于n了。那么大于n的部分也是不可能取到的。故将m重置为n 
+            m=n;
+        ans=calc(n,m);//对于给定的n,m有多少个组合数 
+        int lenn=0,lenm=0;
+        while(n)//记录n在p进制下每一数位的值 
+            a[lenn++]=n%P,n/=P;
+        while(m)//记录m在p进制下每一数位的值 
+            b[lenm++]=m%P,m/=P;
+        memset(dp,0,sizeof(dp));
+        dp[lenn][3]=1;//最高位n和m都到了上界 
+        for(int i=lenn-1;~i;i--){//因为没限制，且是p进制数。故每一位的取值是0~p-1. 
+            dp[i][0]=dp[i+1][0]*calc(P-1,P-1)+dp[i+1][1]*calc(a[i]-1,P-1)//因为n有限制故…… 
+                      +dp[i+1][2]*calc(P-1,b[i]-1)+dp[i+1][3]*calc(a[i]-1,b[i]-1);
+            dp[i][1]=dp[i+1][1]*calc1(a[i], P-1)+dp[i+1][3]*calc1(a[i],b[i]-1);
+            dp[i][2]=dp[i+1][2]*calc2(P-1, b[i])+dp[i+1][3]*calc2(a[i]-1,b[i]);
+            dp[i][3]=dp[i+1][3]&(a[i] >= b[i]);//dp[i][3] :n，m的前i位都到达了上界
+            dp[i][0]%=Mod;//dp[i][0] :第i位无限制 
+            dp[i][1]%=Mod;//dp[i][1] :n的前i位为上界，m未达上界 
+            dp[i][2] %= Mod;//dp[i][2] :m的前i位位上界，n未达上界 
+            a[i]=b[i]=0;//清空。以后也用不到了。 
+        }
+        ans-=dp[0][0]+dp[0][1]+dp[0][2]+dp[0][3];//减去一个都不大于的情况就是至少有一个的情况 
+        ans=((ans%Mod)+Mod)%Mod;//ans最小整模数 
+        printf("%lld\n",ans);
+    }
+}
