@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+	int n;
+	cin>>n;
+	int a[100];
+	memset(a,0,sizeof(a));
+	int sum=0,cnt=1,i=1;
+	for(;sum<n;i*=2,cnt++){
+		int m=i;
+		for(;m>0&&sum<n;m--,sum++){
+			int l;
+			cin>>l;
+			a[cnt]+=l;
+		}
+	}
+	int ans=99;
+	for(int i=1;i<=cnt;i++){
+		if(a[i]>a[ans])ans=i;
+	}
+	cout<<ans;
+	return 0;
+} 

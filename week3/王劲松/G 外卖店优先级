@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+struct x{
+	int ts;
+	int id;
+};
+bool cmp(x x1,x x2){
+	return x1.ts <x2.ts ;
+}
+int main(){
+	x  xx[100000];
+	int n,m,t;
+	cin>>n>>m>>t;
+	for(int i=0;i<m;i++){
+		cin>>xx[i].ts >>xx[i].id ;
+	}
+	sort(xx,xx+m,cmp);
+	int n1[n+1],yx[n+1];
+	memset(n1,0,sizeof(n1));
+	memset(yx,0,sizeof(yx));
+	int i=0;
+	for(int k=1;k<=t;k++){
+		int nn[n+1];
+		memset(nn,0,sizeof(nn));
+		for(int l=1;l<=n;l++){
+			if(n1[l]>0){
+				n1[l]--;
+				nn[l]=1;
+			}
+		}
+		if(k==xx[i].ts ){
+			int n2[n+1];
+			memset(n2,0,sizeof(n2));
+			for(;k==xx[i].ts ;i++){
+				n2[xx[i].id ]=1;
+				n1[xx[i].id ]+=2;
+			}
+			for(int l=1;l<=n;l++){
+				if(nn[l])n1[l]+=n2[l];
+			}
+		}
+		for(int l=1;l<=n;l++){
+			if(yx[l]==0){
+				if(n1[l]>5)yx[l]=1;
+			}
+			if(yx[l]==1){
+				if(n1[l]<=3)yx[l]=0;
+			}
+		}
+	}
+	int cnt=0;
+	for(int l=1;l<=n;l++){
+		cnt+=yx[l];
+	}
+	cout<<cnt;
+
+	return 0;
+} 
