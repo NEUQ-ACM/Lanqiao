@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+using namespace std;
+double a[500001];
+int main(){
+	int n,s;
+	cin>>n>>s;
+	double av=1.0*s/n;
+	for(int i=0;i<n;i++)cin>>a[i];
+	sort(a,a+n);
+	double ans=0.0,nav=av;
+	for(int l=0;l<n;l++){
+		if(a[l]<nav){
+			ans+=(double)pow(av-a[l],2);
+			s-=a[l];
+			nav=1.0*s/(n-l-1);
+		}
+		else{
+			ans+=(double)pow(nav-av,2);
+		}
+	}
+	printf("%.4lf", sqrt(ans/n));
+	return 0;
+}
