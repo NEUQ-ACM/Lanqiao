@@ -1,0 +1,69 @@
+#include <iostream> 
+using namespace std;
+int count=0;
+void rizi(int n,int y,int r,int xi)
+{
+    while(1)
+    {
+        r++;
+        count++;//每天一跑 
+        xi=(xi+1)%7;
+        if(xi==1)//周一就加跑一下 
+        count++;
+//月份判断       
+        if(y==1||y==3||y==5||y==7||y==8||y==10||y==12)
+        {
+            if(r>31)
+            {
+                y++;
+                r=1;
+                if(xi!=1)//如果不是周一，就加跑 
+                count++;
+            }
+        }
+        if(y==4||y==6||y==9||y==11)
+        {
+            if(r>30)
+            {
+                y++;
+                r=1;
+                if(xi!=1)//如果不是周一，就加跑 
+                count++;
+            }
+        }
+        if(n%4==0||n%400==0&&n%100!=0)
+        {
+            if(r>29&&y==2)
+            {
+                y++;
+                r=1;
+                if(xi!=1)//如果不是周一，就加跑 
+                count++;
+            }
+        }
+        else
+        {
+            if(r>28&&y==2)
+            {
+                y++;
+                r=1;
+                if(xi!=1)
+                count++;
+            }
+        }     
+//年份判断
+    if(y>12)
+    {
+        n++;
+        y=1;
+        r=1;
+    } 
+    if(n==2020&&y==10&&r==1)
+    break;
+    }
+
+}
+int main(){
+    rizi(2000,1,1,6);
+    cout<<count+2;//别忘了我们第一天的两公里 
+}
